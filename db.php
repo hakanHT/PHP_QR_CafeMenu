@@ -1,10 +1,10 @@
 <?php
 // Veritabani baglanti dosyasi 
 
-$sunucu   = "127.0.0.1";   // XAMPP yerel sunucu
-$kullanici = "root";        // Varsayilan XAMPP kullanici
-$sifre     = "";            // XAMPP'te varsayilan sifre bos
-$veritabani = "dostum_kafe"; // Bizim veritabanimiz
+$sunucu   = "127.0.0.1";   
+$kullanici = "root";        
+$sifre     = "";            
+$veritabani = "dostum_kafe"; 
 
 // Baglantiyi kur
 $baglanti = mysqli_connect($sunucu, $kullanici, $sifre, $veritabani);
