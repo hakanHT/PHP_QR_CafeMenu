@@ -1,0 +1,3 @@
+# Yüklenen görseller
+uploads/*
+!uploads/.gitkeep
