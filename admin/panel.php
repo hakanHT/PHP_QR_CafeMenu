@@ -13,9 +13,11 @@ require '../db.php';
 $kat_sorgu = mysqli_query($baglanti, "SELECT COUNT(*) as toplam FROM kategoriler");
 $kat_sayisi = mysqli_fetch_assoc($kat_sorgu)['toplam'];
 
-// Urun sayisi
-$urun_sorgu = mysqli_query($baglanti, "SELECT COUNT(*) as toplam FROM urunler");
-$urun_sayisi = mysqli_fetch_assoc($urun_sorgu)['toplam'];
+// Aktif ve toplam ürün sayısı
+$urun_sorgu = mysqli_query($baglanti, "SELECT COUNT(*) as toplam, SUM(aktif) as aktif FROM urunler");
+$urun_data = mysqli_fetch_assoc($urun_sorgu);
+$urun_sayisi = $urun_data['toplam'];
+$aktif_urun = (int)($urun_data['aktif'] ?? 0);
 
 mysqli_close($baglanti);
 ?>
@@ -54,7 +56,7 @@ mysqli_close($baglanti);
             <a href="urunler.php" class="admin-menu-btn">
                 <div class="admin-menu-icon">🍽️</div>
                 <div class="admin-menu-title">Ürünler</div>
-                <div class="admin-menu-count"><?php echo $urun_sayisi; ?> ürün</div>
+                <div class="admin-menu-count"><?php echo $urun_sayisi; ?> ürün &bull; <?php echo $aktif_urun; ?> aktif</div>
             </a>
 
             <!-- Menuyu Gor -->

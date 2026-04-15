@@ -43,14 +43,17 @@ if (isset($_POST['ekle'])) {
         }
     }
     
-    $sql = "INSERT INTO kategoriler (isim, ikon, sira, gorsel) VALUES ('$isim', '$ikon', $sira, " . ($gorsel ? "'$gorsel'" : "NULL") . ")";
-    
-    if (mysqli_query($baglanti, $sql)) {
-        $mesaj = "Kategori başarıyla eklendi!";
-        $mesaj_tip = "success";
-    } else {
-        $mesaj = "Hata: " . mysqli_error($baglanti);
-        $mesaj_tip = "danger";
+    // Hata yoksa veritabanına eklenir
+    if (!isset($mesaj)) {
+        $sql = "INSERT INTO kategoriler (isim, ikon, sira, gorsel) VALUES ('$isim', '$ikon', $sira, " . ($gorsel ? "'$gorsel'" : "NULL") . ")";
+        
+        if (mysqli_query($baglanti, $sql)) {
+            $mesaj = "Kategori başarıyla eklendi!";
+            $mesaj_tip = "success";
+        } else {
+            $mesaj = "Hata: " . mysqli_error($baglanti);
+            $mesaj_tip = "danger";
+        }
     }
 }
 
@@ -66,9 +69,20 @@ if (isset($_GET['sil'])) {
         unlink('../' . $kategori['gorsel']);
     }
     
-    // Kategoriyi sil 
+    // Kategorideki ürünlerin görselleri diskten silinir
+    $urun_sorgu = mysqli_query($baglanti, "SELECT gorsel FROM urunler WHERE kategori_id = $id");
+    while ($urun = mysqli_fetch_assoc($urun_sorgu)) {
+        if (!empty($urun['gorsel']) && file_exists('../' . $urun['gorsel'])) {
+            unlink('../' . $urun['gorsel']);
+        }
+    }
+
+    // Kategorideki tüm ürünler silinir
+    mysqli_query($baglanti, "DELETE FROM urunler WHERE kategori_id = $id");
+
+    // Kategori silinir
     if (mysqli_query($baglanti, "DELETE FROM kategoriler WHERE id = $id")) {
-        $mesaj = "Kategori silindi!";
+        $mesaj = "Kategori ve içindeki ürünler silindi!";
         $mesaj_tip = "success";
     }
 }
@@ -124,7 +138,8 @@ if (isset($_POST['guncelle'])) {
 }
 
 // Kategorileri listele
-$kategoriler = mysqli_query($baglanti, "SELECT * FROM kategoriler ORDER BY sira ASC");
+// Kategoriler ürün sayısıyla birlikte çekilir
+$kategoriler = mysqli_query($baglanti, "SELECT k.*, COUNT(u.id) as urun_sayisi FROM kategoriler k LEFT JOIN urunler u ON u.kategori_id = k.id GROUP BY k.id ORDER BY k.sira ASC");
 ?>
 <!doctype html>
 <html lang="tr">
@@ -184,7 +199,7 @@ $kategoriler = mysqli_query($baglanti, "SELECT * FROM kategoriler ORDER BY sira 
                             <td><?php echo $kat['sira']; ?></td>
                             <td>
                                 <button class="btn-admin btn-admin-primary btn-sm" onclick="duzenle(<?php echo htmlspecialchars(json_encode($kat)); ?>)">Düzenle</button>
-                                <a href="?sil=<?php echo $kat['id']; ?>" class="btn-admin btn-admin-danger btn-sm" onclick="return confirm('Bu kategoriyi silmek istediğinize emin misiniz?')">Sil</a>
+                                <a href="?sil=<?php echo $kat['id']; ?>" class="btn-admin btn-admin-danger btn-sm" onclick="return silOnay(<?php echo $kat['urun_sayisi']; ?>)">Sil</a>
                             </td>
                         </tr>
                     <?php endwhile; ?>
@@ -208,8 +223,16 @@ $kategoriler = mysqli_query($baglanti, "SELECT * FROM kategoriler ORDER BY sira 
                             <input type="text" name="isim" class="form-control admin-input" required>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">İkon (emoji)</label>
-                            <input type="text" name="ikon" class="form-control admin-input" placeholder="☕">
+                            <label class="form-label">İkon <small class="text-muted">(opsiyonel)</small></label>
+                            <div class="d-flex gap-2 align-items-center">
+                                <input type="text" name="ikon" id="ekle_ikon" class="form-control admin-input" placeholder="Boş bırakılabilir">
+                                <button type="button" class="btn-admin btn-admin-white btn-sm text-nowrap" onclick="emojiToggle('ekle_emoji_grid', this)">😊 Seç</button>
+                            </div>
+                            <div id="ekle_emoji_grid" class="emoji-grid mt-2" style="display:none;">
+                                <?php foreach(['☕','🍵','🧃','🥤','🍺','🍷','🥛','🍕','🍔','🌮','🌯','🥗','🍜','🍣','🥩','🍰','🎂','🍩','🍪','🍫'] as $e): ?>
+                                    <span class="emoji-btn" onclick="emojiSec('ekle_ikon', '<?php echo $e; ?>', 'ekle_emoji_grid')"><?php echo $e; ?></span>
+                                <?php endforeach; ?>
+                            </div>
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Sıra</label>
@@ -217,7 +240,8 @@ $kategoriler = mysqli_query($baglanti, "SELECT * FROM kategoriler ORDER BY sira 
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Görsel</label>
-                            <input type="file" name="gorsel" class="form-control admin-input" accept="image/*">
+                            <input type="file" name="gorsel" class="form-control admin-input" accept="image/*" onchange="onizle(this, 'ekle_onizleme')">
+                            <img id="ekle_onizleme" class="gorsel-onizleme" alt="Önizleme">
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -245,8 +269,16 @@ $kategoriler = mysqli_query($baglanti, "SELECT * FROM kategoriler ORDER BY sira 
                             <input type="text" name="isim" id="edit_isim" class="form-control admin-input" required>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">İkon (emoji)</label>
-                            <input type="text" name="ikon" id="edit_ikon" class="form-control admin-input">
+                            <label class="form-label">İkon <small class="text-muted">(opsiyonel)</small></label>
+                            <div class="d-flex gap-2 align-items-center">
+                                <input type="text" name="ikon" id="edit_ikon" class="form-control admin-input" placeholder="Boş bırakılabilir">
+                                <button type="button" class="btn-admin btn-admin-white btn-sm text-nowrap" onclick="emojiToggle('edit_emoji_grid', this)">😊 Seç</button>
+                            </div>
+                            <div id="edit_emoji_grid" class="emoji-grid mt-2" style="display:none;">
+                                <?php foreach(['☕','🍵','🧃','🥤','🍺','🍷','🥛','🍕','🍔','🌮','🌯','🥗','🍜','🍣','🥩','🍰','🎂','🍩','🍪','🍫'] as $e): ?>
+                                    <span class="emoji-btn" onclick="emojiSec('edit_ikon', '<?php echo $e; ?>', 'edit_emoji_grid')"><?php echo $e; ?></span>
+                                <?php endforeach; ?>
+                            </div>
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Sıra</label>
@@ -254,7 +286,8 @@ $kategoriler = mysqli_query($baglanti, "SELECT * FROM kategoriler ORDER BY sira 
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Yeni Görsel (opsiyonel)</label>
-                            <input type="file" name="gorsel" class="form-control admin-input" accept="image/*">
+                            <input type="file" name="gorsel" class="form-control admin-input" accept="image/*" onchange="onizle(this, 'edit_onizleme')">
+                            <img id="edit_onizleme" class="gorsel-onizleme" alt="Önizleme">
                             <small class="text-muted">Boş bırakırsanız mevcut görsel korunur</small>
                         </div>
                     </div>
@@ -274,7 +307,44 @@ $kategoriler = mysqli_query($baglanti, "SELECT * FROM kategoriler ORDER BY sira 
             document.getElementById('edit_isim').value = kat.isim;
             document.getElementById('edit_ikon').value = kat.ikon;
             document.getElementById('edit_sira').value = kat.sira;
+            // Düzenleme modalı açılırken önizleme ve emoji grid sıfırlanır
+            document.getElementById('edit_onizleme').style.display = 'none';
+            document.getElementById('edit_emoji_grid').style.display = 'none';
             new bootstrap.Modal(document.getElementById('duzenleModal')).show();
+        }
+
+        // Emoji gridini açıp kapatır
+        function emojiToggle(gridId, btn) {
+            const grid = document.getElementById(gridId);
+            const acik = grid.style.display !== 'none';
+            grid.style.display = acik ? 'none' : 'flex';
+            btn.textContent = acik ? '😊 Seç' : '✕ Kapat';
+        }
+
+        // Emoji seçilince input'a yazar ve grid kapanır
+        function emojiSec(inputId, emoji, gridId) {
+            document.getElementById(inputId).value = emoji;
+            document.getElementById(gridId).style.display = 'none';
+            // Toggle butonunu sıfırla
+            const btn = document.querySelector('[onclick*="' + gridId + '"]');
+            if (btn) btn.textContent = '😊 Seç';
+        }
+
+        // İçinde ürün varsa uyarılı silme onayı
+        function silOnay(urunSayisi) {
+            if (urunSayisi > 0) {
+                return confirm('Bu kategoride ' + urunSayisi + ' ürün var. Kategoriyle birlikte tüm ürünler de silinecek. Devam edilsin mi?');
+            }
+            return confirm('Bu kategoriyi silmek istiyor musunuz?');
+        }
+
+        // Seçilen görselin önizlemesini gösterir
+        function onizle(input, hedefId) {
+            const img = document.getElementById(hedefId);
+            if (input.files && input.files[0]) {
+                img.src = URL.createObjectURL(input.files[0]);
+                img.style.display = 'block';
+            }
         }
     </script>
 </body>

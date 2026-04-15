@@ -54,42 +54,48 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     <!-- Ana container -->
     <div class="login-container">
+
         <!-- Sol - Logo -->
         <div class="logo-section">
             <img src="../dostum_images/DOSTUMKAFE_NOBG_logo.png" alt="Dostum Kafe Logo">
+            <span class="logo-altyazi">Yönetim Paneli</span>
         </div>
+
+        <!-- Orta - Dikey cizgi -->
+        <div class="login-divider"></div>
 
         <!-- Sag - Form -->
         <div class="form-section">
-            <div class="form-card">
-                <h2>Admin Girişi</h2>
-                <p>Yönetim paneline hoş geldiniz</p>
+            <h2 class="login-baslik">Giriş Yap</h2>
+            <p class="login-altyazi">Yönetim paneline erişmek için kimliğini doğrula</p>
 
-                <?php if (isset($hata)) : ?>
-                    <div class="alert"><?php echo $hata; ?></div>
-                <?php endif; ?>
+            <?php if (isset($hata)) : ?>
+                <div class="login-hata"><?php echo $hata; ?></div>
+            <?php endif; ?>
 
-                <form method="POST" action="">
-                    <div class="mb-3">
-                        <input type="text" 
-                               name="kullanici_adi" 
-                               class="form-control" 
-                               placeholder="Kullanıcı Adı" 
-                               required 
-                               autocomplete="username">
-                    </div>
-                    <div class="mb-4">
-                        <input type="password" 
-                               name="sifre" 
-                               class="form-control" 
-                               placeholder="Şifre" 
-                               required 
-                               autocomplete="current-password">
-                    </div>
-                    <button type="submit" class="btn-login">Giriş Yap</button>
-                </form>
-            </div>
+            <form method="POST" action="">
+                <div class="login-input-grup">
+                    <span class="login-input-ikon">👤</span>
+                    <input type="text"
+                           name="kullanici_adi"
+                           class="login-input"
+                           placeholder="Kullanıcı Adı"
+                           required
+                           autocomplete="username">
+                </div>
+                <div class="login-input-grup">
+                    <span class="login-input-ikon">🔒</span>
+                    <input type="password"
+                           name="sifre"
+                           class="login-input"
+                           placeholder="Şifre"
+                           required
+                           autocomplete="current-password">
+                </div>
+                <button type="submit" class="btn-login">Giriş Yap →</button>
+            </form>
         </div>
+
     </div>
 
 </body>

@@ -12,7 +12,6 @@
 
 /* --- LOGIN SAYFASI --- */
 
-/* Body - siyah arka plan */
 body.login-body {
     font-family: 'Poppins', sans-serif;
     background: #000;
@@ -20,117 +19,163 @@ body.login-body {
     display: flex;
     align-items: center;
     justify-content: center;
-    position: relative;
+    padding: 40px 20px;
 }
 
-/* Ana container - logo + form */
+/* İki panel + çizgi */
 .login-container {
-    position: relative;
-    z-index: 10;
     display: flex;
     align-items: center;
-    gap: 80px;
-    max-width: 1200px;
-    padding: 40px;
+    width: 100%;
+    max-width: 960px;
+    min-height: 480px;
 }
 
-/* Sol taraf - Logo */
+/* Sol - Logo bölümü */
 .logo-section {
     flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 50px;
     text-align: center;
 }
 
 .logo-section img {
-    max-width: 350px;
+    max-width: 400px;
     width: 100%;
-    filter: drop-shadow(0 0 30px rgba(255, 255, 255, 0.2));
+    filter: drop-shadow(0 0 40px rgba(255, 255, 255, 0.12));
 }
 
-/* Sag taraf - Form */
+/* Logo altı küçük yazı */
+.logo-altyazi {
+    display: block;
+    margin-top: 18px;
+    color: rgba(255, 255, 255, 0.3);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+}
+
+/* Orta dikey çizgi */
+.login-divider {
+    width: 1px;
+    align-self: stretch;
+    flex-shrink: 0;
+    background: linear-gradient(
+        to bottom,
+        transparent,
+        rgba(255, 255, 255, 0.2) 20%,
+        rgba(255, 255, 255, 0.2) 80%,
+        transparent
+    );
+    margin: 0 10px;
+}
+
+/* Sağ - Form bölümü */
 .form-section {
     flex: 1;
-    max-width: 420px;
+    padding: 40px 50px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
-/* Form karti - glassmorphism efekti */
-.form-card {
-    background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 20px;
-    padding: 40px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-}
-
-/* Form basligi */
-.form-card h2 {
+/* Form başlığı */
+.login-baslik {
     color: #fff;
-    font-size: 1.8rem;
+    font-size: 2rem;
     font-weight: 700;
-    margin-bottom: 10px;
-    text-align: center;
+    margin: 0 0 8px 0;
 }
 
-/* Form alt yazi */
-.form-card p {
-    color: #aaa;
-    text-align: center;
-    margin-bottom: 30px;
-    font-size: 0.9rem;
+/* Form alt yazı */
+.login-altyazi {
+    color: rgba(255, 255, 255, 0.35);
+    font-size: 0.85rem;
+    margin: 0 0 32px 0;
+    line-height: 1.5;
 }
 
-/* Input alanlari */
-.form-control {
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+/* Input grubu - ikon + alan */
+.login-input-grup {
+    position: relative;
+    margin-bottom: 16px;
+}
+
+.login-input-ikon {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1rem;
+    pointer-events: none;
+    line-height: 1;
+}
+
+.login-input {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.12);
     border-radius: 10px;
-    padding: 14px 18px;
+    padding: 14px 16px 14px 46px;
     color: #fff;
     font-size: 0.95rem;
-    transition: all 0.3s ease;
+    font-family: 'Poppins', sans-serif;
+    transition: border-color 0.25s, background 0.25s;
+    outline: none;
 }
 
-/* Input focus hali */
-.form-control:focus {
-    background: rgba(255, 255, 255, 0.12);
-    border-color: #fff;
-    box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
-    color: #fff;
+.login-input:focus {
+    border-color: rgba(255, 255, 255, 0.5);
+    background: rgba(255, 255, 255, 0.08);
 }
 
-/* Input placeholder rengi */
-.form-control::placeholder {
-    color: #888;
+.login-input::placeholder {
+    color: rgba(255, 255, 255, 0.3);
 }
 
-/* Giris butonu */
+/* Giriş butonu */
 .btn-login {
     width: 100%;
+    margin-top: 8px;
     background: #fff;
     color: #000;
     border: none;
     border-radius: 10px;
     padding: 14px;
-    font-size: 1rem;
+    font-size: 0.95rem;
     font-weight: 700;
+    font-family: 'Poppins', sans-serif;
     letter-spacing: 0.5px;
-    text-transform: uppercase;
-    transition: all 0.3s ease;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
 }
 
-/* Giris butonu hover */
 .btn-login:hover {
-    background: #f0f0f0;
+    background: #e8e8e8;
     transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 24px rgba(255, 255, 255, 0.15);
 }
 
-/* Giris butonu (basilinca) */
 .btn-login:active {
     transform: translateY(0);
 }
 
-/* Hata mesaji */
+/* Hata mesajı */
+.login-hata {
+    background: rgba(220, 53, 69, 0.1);
+    border: 1px solid rgba(220, 53, 69, 0.3);
+    border-radius: 8px;
+    color: #ff6b6b;
+    padding: 10px 14px;
+    margin-bottom: 20px;
+    font-size: 0.85rem;
+}
+
+/* Eski .alert - modal sayfalar için korunur */
 .alert {
     background: rgba(220, 53, 69, 0.15);
     border: 1px solid rgba(220, 53, 69, 0.3);
@@ -496,29 +541,92 @@ body.admin-crud-body {
     color: #ff6b6b;
 }
 
+/* Emoji secici grid */
+.emoji-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+/* Tek emoji butonu */
+.emoji-btn {
+    font-size: 1.4rem;
+    cursor: pointer;
+    padding: 4px 6px;
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.05);
+    transition: background 0.2s;
+    line-height: 1;
+    user-select: none;
+}
+
+.emoji-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+/* Gorsel onizleme */
+.gorsel-onizleme {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    margin-top: 8px;
+    display: none;
+}
+
+/* Sari buton - aktif/pasif toggle */
+.btn-admin-warning {
+    background: #ffc107;
+    color: #000;
+}
+
+.btn-admin-warning:hover {
+    background: #e0a800;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255, 193, 7, 0.3);
+    color: #000;
+}
+
 /* --- MOBIL UYUMLULUK --- */
 @media (max-width: 768px) {
-    /* Login sayfasi - dikey dizilim */
+    /* Login - dikey dizilim */
     .login-container {
         flex-direction: column;
-        gap: 40px;
-        padding: 20px;
+        min-height: unset;
     }
 
-    /* Logo kucult */
+    /* Dikey çizgi gizlenir, yatay olur */
+    .login-divider {
+        width: 80%;
+        height: 1px;
+        align-self: center;
+        margin: 0;
+        background: linear-gradient(
+            to right,
+            transparent,
+            rgba(255, 255, 255, 0.2) 20%,
+            rgba(255, 255, 255, 0.2) 80%,
+            transparent
+        );
+    }
+
+    .logo-section {
+        padding: 32px 24px 24px;
+    }
+
     .logo-section img {
-        max-width: 200px;
+        max-width: 220px;
     }
 
-    /* Form genisligi */
     .form-section {
-        max-width: 100%;
+        padding: 24px 24px 40px;
         width: 100%;
     }
 
-    /* Form padding azalt */
-    .form-card {
-        padding: 30px 24px;
+    .login-baslik {
+        font-size: 1.6rem;
     }
 
     /* Admin panel - tek sutun */

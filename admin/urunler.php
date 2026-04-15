@@ -167,6 +167,12 @@ if (isset($_POST['guncelle'])) {
     } // Fiyat kontrolu kapanisi
 }
 
+// --- AKTIF/PASIF TOGGLE ---
+if (isset($_GET['toggle'])) {
+    $toggle_id = (int) $_GET['toggle'];
+    mysqli_query($baglanti, "UPDATE urunler SET aktif = 1 - aktif WHERE id = $toggle_id");
+}
+
 // Urunleri kategorileriyle beraber listele
 $urunler = mysqli_query($baglanti, "SELECT u.*, k.isim as kategori_adi FROM urunler u LEFT JOIN kategoriler k ON u.kategori_id = k.id ORDER BY u.id DESC");
 
@@ -231,11 +237,11 @@ $kategoriler = mysqli_query($baglanti, "SELECT * FROM kategoriler ORDER BY sira 
                             <td><?php echo $urun['kategori_adi']; ?></td>
                             <td><?php echo number_format($urun['fiyat'], 2); ?> ₺</td>
                             <td>
-                                <?php if ($urun['aktif']) : ?>
-                                    <span class="badge bg-success">Aktif</span>
-                                <?php else : ?>
-                                    <span class="badge bg-secondary">Pasif</span>
-                                <?php endif; ?>
+                                <a href="?toggle=<?php echo $urun['id']; ?>" 
+                                   class="btn-admin btn-sm <?php echo $urun['aktif'] ? 'btn-admin-success' : 'btn-admin-warning'; ?>"
+                                   onclick="return confirm('Ürün durumu değiştirilsin mi?')">
+                                    <?php echo $urun['aktif'] ? 'Aktif' : 'Pasif'; ?>
+                                </a>
                             </td>
                             <td>
                                 <button class="btn-admin btn-admin-primary btn-sm" onclick="duzenle(<?php echo htmlspecialchars(json_encode($urun)); ?>)">Düzenle</button>
@@ -287,7 +293,8 @@ $kategoriler = mysqli_query($baglanti, "SELECT * FROM kategoriler ORDER BY sira 
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Görsel</label>
-                                <input type="file" name="gorsel" class="form-control admin-input" accept="image/*">
+                                <input type="file" name="gorsel" class="form-control admin-input" accept="image/*" onchange="onizle(this, 'ekle_urun_onizleme')">
+                                <img id="ekle_urun_onizleme" class="gorsel-onizleme" alt="Önizleme">
                             </div>
                         </div>
                         <div class="form-check">
@@ -343,7 +350,8 @@ $kategoriler = mysqli_query($baglanti, "SELECT * FROM kategoriler ORDER BY sira 
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Yeni Görsel (opsiyonel)</label>
-                                <input type="file" name="gorsel" class="form-control admin-input" accept="image/*">
+                                <input type="file" name="gorsel" class="form-control admin-input" accept="image/*" onchange="onizle(this, 'edit_urun_onizleme')">
+                                <img id="edit_urun_onizleme" class="gorsel-onizleme" alt="Önizleme">
                                 <small class="text-muted">Boş bırakırsanız mevcut görsel korunur</small>
                             </div>
                         </div>
@@ -370,7 +378,19 @@ $kategoriler = mysqli_query($baglanti, "SELECT * FROM kategoriler ORDER BY sira 
             document.getElementById('edit_aciklama').value = urun.aciklama;
             document.getElementById('edit_fiyat').value = urun.fiyat;
             document.getElementById('edit_aktif').checked = urun.aktif == 1;
+            // Düzenleme modalı açılırken önizleme sıfırlanır
+            const onizleme = document.getElementById('edit_urun_onizleme');
+            onizleme.style.display = 'none';
             new bootstrap.Modal(document.getElementById('duzenleModal')).show();
+        }
+
+        // Seçilen görselin önizlemesini gösterir
+        function onizle(input, hedefId) {
+            const img = document.getElementById(hedefId);
+            if (input.files && input.files[0]) {
+                img.src = URL.createObjectURL(input.files[0]);
+                img.style.display = 'block';
+            }
         }
     </script>
 </body>
