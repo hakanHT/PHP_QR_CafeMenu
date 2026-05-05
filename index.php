@@ -43,6 +43,18 @@ $currentYear = date('Y');
                     <li class="nav-item ms-lg-3">
                         <a class="btn btn-brand btn-sm" href="#menu">Menüyü Keşfet</a>
                     </li>
+                    <li class="nav-item d-none d-lg-flex">
+                        <span class="nav-divider" aria-hidden="true"></span>
+                    </li>
+                    <li class="nav-item ms-lg-2">
+                        <a class="nav-login" href="login.php" aria-label="Giriş yap">
+                            <svg class="login-icon" viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M20 21a8 8 0 0 0-16 0"></path>
+                                <circle cx="12" cy="7" r="4"></circle>
+                            </svg>
+                            <span>Giriş Yap</span>
+                        </a>
+                    </li>
                 </ul>
             </div>
         </div>

@@ -93,6 +93,48 @@ img {
     color: var(--color-brand);
 }
 
+/* Giriş butonu */
+.nav-divider {
+    display: block;
+    width: 1px;
+    height: 30px;
+    margin: 0 4px 0 14px;
+    background: rgba(255, 255, 255, 0.72);
+}
+
+.nav-login {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 42px;
+    padding: 0 14px;
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    transition: color 160ms ease, border-color 160ms ease, background-color 160ms ease;
+}
+
+.nav-login:hover {
+    color: #fff;
+    border-color: var(--color-brand);
+    background: rgba(84, 48, 0, 0.32);
+}
+
+.login-icon {
+    width: 15px;
+    height: 15px;
+    flex: 0 0 15px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
 /* Hero */
 .hero {
     min-height: 780px;
@@ -456,7 +498,31 @@ img {
     }
 
     .navbar-collapse {
-        padding: 18px 0;
+        padding: 18px 0 8px;
+    }
+
+    .navbar-nav {
+        align-items: flex-start !important;
+        gap: 8px;
+    }
+
+    .navbar-nav .nav-link {
+        padding: 8px 0 !important;
+    }
+
+    .navbar-nav .nav-item {
+        width: 100%;
+    }
+
+    .navbar-nav .btn-brand,
+    .nav-login {
+        width: min(220px, 100%);
+        justify-content: center;
+    }
+
+    .navbar-nav .nav-item.ms-lg-3,
+    .navbar-nav .nav-item.ms-lg-2 {
+        margin-left: 0 !important;
     }
 
     .brand-logo {
@@ -511,4 +577,94 @@ img {
         width: 96px;
         height: 96px;
     }
+}
+
+/* Giriş Sayfası Özel Stiller */
+.login-page {
+    background: linear-gradient(rgba(8, 7, 6, 0.8), rgba(8, 7, 6, 0.9)), url("../images/about.jpg");
+    background-position: center;
+    background-size: cover;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.login-wrapper {
+    width: 100%;
+    max-width: 440px;
+    padding: 20px;
+}
+
+.login-container {
+    background: rgba(13, 11, 10, 0.96);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 42px;
+    box-shadow: 0 40px 80px rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(15px);
+}
+
+.login-logo {
+    width: 140px;
+    margin-bottom: 24px;
+}
+
+.login-header h1 {
+    color: #fff;
+    font-family: var(--font-title);
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.login-header p {
+    color: var(--color-muted);
+    font-size: 14px;
+    margin-bottom: 34px;
+}
+
+.form-label {
+    color: #fff;
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 8px;
+}
+
+.custom-input {
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0;
+    color: #fff;
+    padding: 12px 16px;
+    font-size: 14px;
+}
+
+.custom-input:focus {
+    background: rgba(0, 0, 0, 0.3);
+    border-color: var(--color-brand);
+    color: #fff;
+    box-shadow: none;
+}
+
+.forgot-link,
+.signup-link {
+    color: var(--color-brand);
+    text-decoration: none;
+    font-size: 13px;
+    transition: color 0.2s;
+}
+
+.forgot-link:hover,
+.signup-link:hover {
+    color: var(--color-brand-light);
+    text-decoration: underline;
+}
+
+.login-footer {
+    font-size: 14px;
+    color: var(--color-muted);
+}
+
+.login-footer span {
+    margin-right: 5px;
 }
