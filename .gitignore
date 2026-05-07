@@ -1,3 +1,11 @@
-# Yüklenen görseller
-uploads/*
-!uploads/.gitkeep
+config.php
+*.sql
+.env
+.env.local
+.vscode/
+.idea/
+Thumbs.db
+desktop.ini
+node_modules/
+dist/
+build/

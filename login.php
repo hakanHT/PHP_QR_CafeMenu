@@ -1,5 +1,22 @@
 <?php
+session_start();
 $pageTitle = 'Giriş Yap - Dostum Kafe';
+
+// Eğer zaten giriş yapmışsa ana sayfaya at
+if (isset($_SESSION['user_id'])) {
+    header("Location: index.php");
+    exit();
+}
+
+// Hata mesajlarını yakala
+$errorMsg = '';
+if (isset($_GET['error'])) {
+    if ($_GET['error'] == 'invalid') $errorMsg = 'Hata: E-posta veya şifre hatalı.';
+    if ($_GET['error'] == 'unverified') $errorMsg = 'Hata: Hesabınız henüz onaylanmamış. Lütfen e-postanızı kontrol edin.';
+}
+if (isset($_GET['status']) && $_GET['status'] == 'verified') {
+    $successMsg = 'Hesabınız başarıyla onaylandı! Giriş yapabilirsiniz.';
+}
 ?>
 <!doctype html>
 <html lang="tr">
@@ -15,8 +32,37 @@ $pageTitle = 'Giriş Yap - Dostum Kafe';
 
     <!-- Ana stil -->
     <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        .back-home-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 999;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: rgba(255,255,255,0.65);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: color 0.3s;
+        }
+        .back-home-btn:hover { color: #fff; }
+        .back-home-btn svg { transition: transform 0.3s; }
+        .back-home-btn:hover svg { transform: translateX(-4px); }
+        @media (max-width: 576px) {
+            .back-home-btn { font-size: 11px; top: 14px; left: 14px; }
+        }
+    </style>
 </head>
 <body class="login-page">
+
+    <a href="index.php" class="back-home-btn">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+        Ana Sayfa
+    </a>
 
     <div class="login-wrapper">
         <div class="login-container">
@@ -28,16 +74,24 @@ $pageTitle = 'Giriş Yap - Dostum Kafe';
                 <h1>Hoş Geldiniz</h1>
             </div>
 
+            <!-- Bildirimler -->
+            <?php if ($errorMsg): ?>
+                <div class="alert alert-danger py-2" style="font-size: 13px;"><?php echo $errorMsg; ?></div>
+            <?php endif; ?>
+            <?php if (isset($successMsg)): ?>
+                <div class="alert alert-success py-2" style="font-size: 13px;"><?php echo $successMsg; ?></div>
+            <?php endif; ?>
+
             <!-- Giriş Formu -->
-            <form action="#" method="POST" class="login-form">
+            <form action="auth_handler.php" method="POST" class="login-form">
                 <div class="form-group mb-4">
                     <label for="email" class="form-label">E-posta Adresi</label>
-                    <input type="email" id="email" name="email" class="form-control custom-input" required>
+                    <input type="email" id="email" name="login_email" class="form-control custom-input" required>
                 </div>
 
                 <div class="form-group mb-4">
                     <label for="password" class="form-label">Şifre</label>
-                    <input type="password" id="password" name="password" class="form-control custom-input" required>
+                    <input type="password" id="password" name="login_password" class="form-control custom-input" required>
                     <div class="text-end mt-2">
                         <a href="#" class="forgot-link">Şifremi Unuttum</a>
                     </div>

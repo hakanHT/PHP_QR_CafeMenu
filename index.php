@@ -1,4 +1,5 @@
 <?php
+session_start();
 // Sayfa başlığı
 $pageTitle = 'Dostum Kafe';
 
@@ -37,24 +38,35 @@ $currentYear = date('Y');
             <div class="collapse navbar-collapse" id="mainNavbar">
                 <ul class="navbar-nav ms-auto align-items-lg-center">
                     <li class="nav-item"><a class="nav-link active" href="#anasayfa">Ana Sayfa</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#hakkimizda">Hakkımızda</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#menu">Menü</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#iletisim">İletişim</a></li>
-                    <li class="nav-item ms-lg-3">
-                        <a class="btn btn-brand btn-sm" href="#menu">Menüyü Keşfet</a>
-                    </li>
-                    <li class="nav-item d-none d-lg-flex">
-                        <span class="nav-divider" aria-hidden="true"></span>
-                    </li>
-                    <li class="nav-item ms-lg-2">
-                        <a class="nav-login" href="login.php" aria-label="Giriş yap">
-                            <svg class="login-icon" viewBox="0 0 24 24" aria-hidden="true">
-                                <path d="M20 21a8 8 0 0 0-16 0"></path>
-                                <circle cx="12" cy="7" r="4"></circle>
-                            </svg>
-                            <span>Giriş Yap</span>
-                        </a>
-                    </li>
+                    <li class="nav-item"><a class="nav-link" href="index.php#hakkimizda">Hakkımızda</a></li>
+                    <li class="nav-item"><a class="nav-link" href="menu.php">Menü</a></li>
+                    <li class="nav-item"><a class="nav-link" href="index.php#iletisim">İletişim</a></li>
+                    
+                    <?php if (isset($_SESSION['user_id'])): ?>
+                        <li class="nav-item ms-lg-3 dropdown">
+                            <a class="nav-link dropdown-toggle text-brand" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <svg class="login-icon me-1" viewBox="0 0 24 24" style="width: 18px; height: 18px;"><path d="M20 21a8 8 0 0 0-16 0"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                                <?php echo explode(' ', $_SESSION['fullname'])[0]; ?>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end" aria-labelledby="userDropdown">
+                                <?php if ($_SESSION['is_admin'] == 1): ?>
+                                    <li><a class="dropdown-item" href="admin_panel.php">Admin Paneli</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+<?php endif; ?>
+                                <li><a class="dropdown-item text-danger" href="logout.php">Çıkış Yap</a></li>
+                            </ul>
+                        </li>
+                    <?php else: ?>
+                        <li class="nav-item ms-lg-3">
+                            <a class="nav-login" href="login.php" aria-label="Giriş yap">
+                                <svg class="login-icon" viewBox="0 0 24 24" aria-hidden="true">
+                                    <path d="M20 21a8 8 0 0 0-16 0"></path>
+                                    <circle cx="12" cy="7" r="4"></circle>
+                                </svg>
+                                <span>Giriş Yap</span>
+                            </a>
+                        </li>
+                    <?php endif; ?>
                 </ul>
             </div>
         </div>
@@ -77,7 +89,7 @@ $currentYear = date('Y');
                             <h1>Kahveyle başlayan dostluklar</h1>
                             <p>Dostum Kafe; taze kahvesi, günlük tatlıları ve sakin atmosferiyle şehir içinde kendinize ayırdığınız keyifli bir durak.</p>
                             <div class="d-flex flex-wrap gap-3 justify-content-center">
-                                <a href="#menu" class="btn btn-brand btn-lg">Menüyü Keşfet</a>
+                                <a href="menu.php" class="btn btn-brand btn-lg">Menüyü Keşfet</a>
                                 <a href="#hakkimizda" class="btn btn-outline-light btn-lg">Bizi Keşfedin</a>
                             </div>
                         </div>
@@ -92,7 +104,7 @@ $currentYear = date('Y');
                             <h1>İyi kahve, sıcak ortam, tanıdık bir his</h1>
                             <p>Kısa bir mola, uzun bir sohbet ya da tek başına geçirilen sakin bir saat. Burada her ziyaretin kendine ait bir tadı var.</p>
                             <div class="d-flex flex-wrap gap-3 justify-content-center">
-                                <a href="#menu" class="btn btn-brand btn-lg">Menüyü Keşfet</a>
+                                <a href="menu.php" class="btn btn-brand btn-lg">Menüyü Keşfet</a>
                                 <a href="#iletisim" class="btn btn-outline-light btn-lg">Bize Ulaşın</a>
                             </div>
                         </div>
@@ -159,7 +171,7 @@ $currentYear = date('Y');
                             <h2>Dostum Kafe'nin hikayesi.</h2>
                             <p>Dostum Kafe, iyi kahveyi güzel sohbetlerle buluşturma fikrinden doğdu. Her şeyin hızlı aktığı şehir hayatında, kendinize ayırdığınız küçük anları değerli kılmak istiyoruz.</p>
                             <p>Bu yüzden menümüzde taze kahveler, günlük tatlılar ve rahat hissettiren lezzetler var. Kapıdan giren herkesin kısa da olsa iyi hislerle ayrılmasını önemsiyoruz.</p>
-                            <a href="#menu" class="btn btn-outline-brand">Menüyü Keşfet</a>
+                            <a href="menu.php" class="btn btn-outline-brand">Menüyü Keşfet</a>
                         </div>
                     </div>
                 </div>
@@ -175,7 +187,7 @@ $currentYear = date('Y');
                     <span class="section-kicker">Menü</span>
                     <h2>Dostum Kafe favorileri.</h2>
                     <p>Menüde güne eşlik eden klasik kahveler, serinleten soğuk içecekler ve kahvenin yanına yakışan tatlılar var. Tanıdık lezzetler, Dostum Kafe dokunuşuyla sunulur.</p>
-                    <a href="#menu" class="btn btn-brand">Menüyü Keşfet</a>
+                    <a href="menu.php" class="btn btn-brand">Menüyü Keşfet</a>
                 </div>
                 <div class="col-lg-7">
                     <div class="row g-3">
@@ -227,7 +239,7 @@ $currentYear = date('Y');
             <div class="row g-4 text-center">
                 <div class="col-6 col-lg-3">
                     <div class="stat-item">
-                        <strong>24</strong>
+                        <strong>22</strong>
                         <span>Özel Lezzet</span>
                     </div>
                 </div>
