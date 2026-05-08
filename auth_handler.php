@@ -31,6 +31,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 exit();
             }
 
+            // Güvenlik: Session fixation saldırısını önlemek için ID yenile
+            session_regenerate_id(true);
+
             // Giriş başarılı, session bilgilerini ata
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['fullname'] = $user['fullname'];
